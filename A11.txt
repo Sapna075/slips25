@@ -1,0 +1,241 @@
+A11
+public class BinaryTree {
+    
+    // Node class to represent each node in the binary tree
+    static class Node {
+        int data;
+        Node left, right;
+
+        // Constructor to create a new node
+        Node(int item) {
+            data = item;
+            left = right = null;
+        }
+    }
+    
+    // Root of the binary tree
+    Node root;
+
+    // In-order Traversal (Left, Root, Right)
+    public void inorder(Node node) {
+        if (node == null) {
+            return;
+        }
+        inorder(node.left);  // Recur on the left child
+        System.out.print(node.data + " ");  // Visit the root node
+        inorder(node.right);  // Recur on the right child
+    }
+
+    // Pre-order Traversal (Root, Left, Right)
+    public void preorder(Node node) {
+        if (node == null) {
+            return;
+        }
+        System.out.print(node.data + " ");  // Visit the root node
+        preorder(node.left);  // Recur on the left child
+        preorder(node.right);  // Recur on the right child
+    }
+
+    // Post-order Traversal (Left, Right, Root)
+    public void postorder(Node node) {
+        if (node == null) {
+            return;
+        }
+        postorder(node.left);  // Recur on the left child
+        postorder(node.right);  // Recur on the right child
+        System.out.print(node.data + " ");  // Visit the root node
+    }
+
+    // Calculate the height of the binary tree
+    public int height(Node node) {
+        if (node == null) {
+            return 0;
+        }
+        // Height is the maximum of the left and right subtree heights + 1
+        return Math.max(height(node.left), height(node.right)) + 1;
+    }
+
+    // Calculate the size of the binary tree (number of nodes)
+    public int size(Node node) {
+        if (node == null) {
+            return 0;
+        }
+        // Size is the sum of left and right subtree sizes + 1 (for the current node)
+        return size(node.left) + size(node.right) + 1;
+    }
+
+    // Main driver method
+    public static void main(String[] args) {
+        BinaryTree tree = new BinaryTree();
+
+        // Create a simple binary tree
+        tree.root = new Node(1);
+        tree.root.left = new Node(2);
+        tree.root.right = new Node(3);
+        tree.root.left.left = new Node(4);
+        tree.root.left.right = new Node(5);
+        tree.root.right.left = new Node(6);
+        tree.root.right.right = new Node(7);
+
+        System.out.println("In-order Traversal:");
+        tree.inorder(tree.root);  // Output: 4 2 5 1 6 3 7 
+        System.out.println();
+
+        System.out.println("Pre-order Traversal:");
+        tree.preorder(tree.root);  // Output: 1 2 4 5 3 6 7 
+        System.out.println();
+
+        System.out.println("Post-order Traversal:");
+        tree.postorder(tree.root);  // Output: 4 5 2 6 7 3 1 
+        System.out.println();
+
+        System.out.println("Height of the tree: " + tree.height(tree.root));  // Output: 3
+        System.out.println("Size of the tree: " + tree.size(tree.root));  // Output: 7
+    }
+}
+-------------------------------------
+package Proj11;
+
+import java.util.*;
+
+class TreeNode {
+    int data;
+    TreeNode left, right;
+
+    // Constructor
+    TreeNode(int value) {
+        data = value;
+        left = right = null;
+    }
+}
+
+class BinaryTree {
+    private TreeNode root;
+
+    // Insert a node into the binary tree
+    public void insert(int data) {
+        root = insertRecursive(root, data);
+    }
+
+    private TreeNode insertRecursive(TreeNode root, int data) {
+        if (root == null) {
+            return new TreeNode(data);
+        }
+        if (data < root.data) {
+            root.left = insertRecursive(root.left, data);
+        } else {
+            root.right = insertRecursive(root.right, data);
+        }
+        return root;
+    }
+
+    // Find the height of the tree
+    public int findHeight() {
+        return calculateHeight(root);
+    }
+
+    private int calculateHeight(TreeNode node) {
+        if (node == null) {
+            return 0;
+        }
+        int leftHeight = calculateHeight(node.left);
+        int rightHeight = calculateHeight(node.right);
+        return Math.max(leftHeight, rightHeight) + 1;
+    }
+
+    // Print all leaf nodes
+    public void printLeafNodes() {
+        System.out.print("Leaf Nodes: ");
+        printLeaves(root);
+        System.out.println();
+    }
+
+    private void printLeaves(TreeNode node) {
+        if (node == null) {
+            return;
+        }
+        if (node.left == null && node.right == null) {
+            System.out.print(node.data + " ");
+        }
+        printLeaves(node.left);
+        printLeaves(node.right);
+    }
+
+    // Create a mirror image of the tree
+    public void createMirror() {
+        root = mirrorTree(root);
+    }
+
+    private TreeNode mirrorTree(TreeNode node) {
+        if (node == null) {
+            return null;
+        }
+        TreeNode left = mirrorTree(node.left);
+        TreeNode right = mirrorTree(node.right);
+
+        node.left = right;
+        node.right = left;
+
+        return node;
+    }
+
+    // Level-wise printing of the tree
+    public void printLevelOrder() {
+        System.out.println("Level-wise Traversal:");
+        if (root == null) {
+            System.out.println("Tree is empty.");
+            return;
+        }
+
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.add(root);
+
+        while (!queue.isEmpty()) {
+            TreeNode current = queue.poll();
+            System.out.print(current.data + " ");
+
+            if (current.left != null) {
+                queue.add(current.left);
+            }
+            if (current.right != null) {
+                queue.add(current.right);
+            }
+        }
+        System.out.println();
+    }
+}
+
+public class BinaryTreeOperations {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        BinaryTree tree = new BinaryTree();
+
+        System.out.println("Enter the number of nodes in the tree:");
+        int n = scanner.nextInt();
+
+        System.out.println("Enter the node values:");
+        for (int i = 0; i < n; i++) {
+            int value = scanner.nextInt();
+            tree.insert(value);
+        }
+
+        // Print original tree
+        System.out.println("\nOriginal Tree:");
+        tree.printLevelOrder();
+
+        // Find height of the tree
+        int height = tree.findHeight();
+        System.out.println("Height of the Tree: " + height);
+
+        // Print leaf nodes
+        tree.printLeafNodes();
+
+        // Create mirror image
+        tree.createMirror();
+        System.out.println("\nMirror Image of the Tree:");
+        tree.printLevelOrder();
+
+        scanner.close();
+    }
+}
+

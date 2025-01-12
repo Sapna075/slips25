@@ -1,0 +1,269 @@
+A7
+
+import java.util.*;
+
+class Graph {
+    private int vertices; // Number of vertices
+    private LinkedList<Integer>[] adjacencyList; // Adjacency list representation
+    private int[][] adjacencyMatrix; // Adjacency matrix representation
+
+    // Constructor for the graph
+    public Graph(int vertices) {
+        this.vertices = vertices;
+        adjacencyList = new LinkedList[vertices];
+        adjacencyMatrix = new int[vertices][vertices];
+
+        for (int i = 0; i < vertices; i++) {
+            adjacencyList[i] = new LinkedList<>();
+        }
+    }
+
+    // Add edge for adjacency list
+    public void addEdgeList(int source, int destination) {
+        adjacencyList[source].add(destination);
+        adjacencyList[destination].add(source); // For an undirected graph
+    }
+
+    // Add edge for adjacency matrix
+    public void addEdgeMatrix(int source, int destination) {
+        adjacencyMatrix[source][destination] = 1;
+        adjacencyMatrix[destination][source] = 1; // For an undirected graph
+    }
+
+    // Display adjacency list
+    public void displayAdjacencyList() {
+        System.out.println("Adjacency List:");
+        for (int i = 0; i < vertices; i++) {
+            System.out.print(i + ": ");
+            for (int neighbor : adjacencyList[i]) {
+                System.out.print(neighbor + " ");
+            }
+            System.out.println();
+        }
+    }
+
+    // Display adjacency matrix
+    public void displayAdjacencyMatrix() {
+        System.out.println("Adjacency Matrix:");
+        for (int i = 0; i < vertices; i++) {
+            for (int j = 0; j < vertices; j++) {
+                System.out.print(adjacencyMatrix[i][j] + " ");
+            }
+            System.out.println();
+        }
+    }
+
+    // Depth First Search using adjacency list
+    public void depthFirstSearchList(int startVertex) {
+        boolean[] visited = new boolean[vertices];
+        System.out.println("DFS Traversal (Adjacency List):");
+        dfsListHelper(startVertex, visited);
+        System.out.println();
+    }
+
+    private void dfsListHelper(int vertex, boolean[] visited) {
+        visited[vertex] = true;
+        System.out.print(vertex + " ");
+        for (int neighbor : adjacencyList[vertex]) {
+            if (!visited[neighbor]) {
+                dfsListHelper(neighbor, visited);
+            }
+        }
+    }
+
+    // Depth First Search using adjacency matrix
+    public void depthFirstSearchMatrix(int startVertex) {
+        boolean[] visited = new boolean[vertices];
+        System.out.println("DFS Traversal (Adjacency Matrix):");
+        dfsMatrixHelper(startVertex, visited);
+        System.out.println();
+    }
+
+    private void dfsMatrixHelper(int vertex, boolean[] visited) {
+        visited[vertex] = true;
+        System.out.print(vertex + " ");
+        for (int i = 0; i < vertices; i++) {
+            if (adjacencyMatrix[vertex][i] == 1 && !visited[i]) {
+                dfsMatrixHelper(i, visited);
+            }
+        }
+    }
+}
+
+public class GraphRepresentation {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Enter the number of vertices in the graph: ");
+        int vertices = scanner.nextInt();
+
+        Graph graph = new Graph(vertices);
+
+        System.out.print("Enter the number of edges: ");
+        int edges = scanner.nextInt();
+
+        System.out.println("Enter the edges (source destination):");
+        for (int i = 0; i < edges; i++) {
+            int source = scanner.nextInt();
+            int destination = scanner.nextInt();
+            graph.addEdgeList(source, destination);
+            graph.addEdgeMatrix(source, destination);
+        }
+
+        // Display graph representations
+        graph.displayAdjacencyList();
+        graph.displayAdjacencyMatrix();
+
+        // Perform DFS using adjacency list
+        System.out.print("Enter the starting vertex for DFS (Adjacency List): ");
+        int startVertexList = scanner.nextInt();
+        graph.depthFirstSearchList(startVertexList);
+
+        // Perform DFS using adjacency matrix
+        System.out.print("Enter the starting vertex for DFS (Adjacency Matrix): ");
+        int startVertexMatrix = scanner.nextInt();
+        graph.depthFirstSearchMatrix(startVertexMatrix);
+
+        scanner.close();
+    }
+}
+-----------------------------------------------------
+package Proj11;
+
+import java.util.*;
+
+class Graph {
+    private int vertices; // Number of vertices
+    private LinkedList<Integer>[] adjacencyList; // Adjacency list representation
+    private int[][] adjacencyMatrix; // Adjacency matrix representation
+
+    // Constructor for the graph
+    public Graph(int vertices) {
+        this.vertices = vertices;
+        adjacencyList = new LinkedList[vertices];
+        adjacencyMatrix = new int[vertices][vertices];
+
+        for (int i = 0; i < vertices; i++) {
+            adjacencyList[i] = new LinkedList<>();
+        }
+    }
+
+    // Add edge for adjacency list
+    public void addEdgeList(int source, int destination) {
+        adjacencyList[source].add(destination);
+        adjacencyList[destination].add(source); // For an undirected graph
+    }
+
+    // Add edge for adjacency matrix
+    public void addEdgeMatrix(int source, int destination) {
+        adjacencyMatrix[source][destination] = 1;
+        adjacencyMatrix[destination][source] = 1; // For an undirected graph
+    }
+
+    // Display adjacency list
+    public void displayAdjacencyList() {
+        System.out.println("Adjacency List:");
+        for (int i = 0; i < vertices; i++) {
+            System.out.print(i + ": ");
+            for (int neighbor : adjacencyList[i]) {
+                System.out.print(neighbor + " ");
+            }
+            System.out.println();
+        }
+    }
+
+    // Display adjacency matrix
+    public void displayAdjacencyMatrix() {
+        System.out.println("Adjacency Matrix:");
+        for (int i = 0; i < vertices; i++) {
+            for (int j = 0; j < vertices; j++) {
+                System.out.print(adjacencyMatrix[i][j] + " ");
+            }
+            System.out.println();
+        }
+    }
+
+    // Breadth First Search using adjacency list
+    public void breadthFirstSearchList(int startVertex) {
+        boolean[] visited = new boolean[vertices];
+        Queue<Integer> queue = new LinkedList<>();
+
+        System.out.println("BFS Traversal (Adjacency List):");
+        visited[startVertex] = true;
+        queue.add(startVertex);
+
+        while (!queue.isEmpty()) {
+            int vertex = queue.poll();
+            System.out.print(vertex + " ");
+
+            for (int neighbor : adjacencyList[vertex]) {
+                if (!visited[neighbor]) {
+                    visited[neighbor] = true;
+                    queue.add(neighbor);
+                }
+            }
+        }
+        System.out.println();
+    }
+
+    // Breadth First Search using adjacency matrix
+    public void breadthFirstSearchMatrix(int startVertex) {
+        boolean[] visited = new boolean[vertices];
+        Queue<Integer> queue = new LinkedList<>();
+
+        System.out.println("BFS Traversal (Adjacency Matrix):");
+        visited[startVertex] = true;
+        queue.add(startVertex);
+
+        while (!queue.isEmpty()) {
+            int vertex = queue.poll();
+            System.out.print(vertex + " ");
+
+            for (int i = 0; i < vertices; i++) {
+                if (adjacencyMatrix[vertex][i] == 1 && !visited[i]) {
+                    visited[i] = true;
+                    queue.add(i);
+                }
+            }
+        }
+        System.out.println();
+    }
+}
+
+public class GraphRepresentationBFS {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Enter the number of vertices in the graph: ");
+        int vertices = scanner.nextInt();
+
+        Graph graph = new Graph(vertices);
+
+        System.out.print("Enter the number of edges: ");
+        int edges = scanner.nextInt();
+
+        System.out.println("Enter the edges (source destination):");
+        for (int i = 0; i < edges; i++) {
+            int source = scanner.nextInt();
+            int destination = scanner.nextInt();
+            graph.addEdgeList(source, destination);
+            graph.addEdgeMatrix(source, destination);
+        }
+
+        // Display graph representations
+        graph.displayAdjacencyList();
+        graph.displayAdjacencyMatrix();
+
+        // Perform BFS using adjacency list
+        System.out.print("Enter the starting vertex for BFS (Adjacency List): ");
+        int startVertexList = scanner.nextInt();
+        graph.breadthFirstSearchList(startVertexList);
+
+        // Perform BFS using adjacency matrix
+        System.out.print("Enter the starting vertex for BFS (Adjacency Matrix): ");
+        int startVertexMatrix = scanner.nextInt();
+        graph.breadthFirstSearchMatrix(startVertexMatrix);
+
+        scanner.close();
+    }
+}

@@ -1,0 +1,139 @@
+A10
+
+import java.util.Arrays;
+
+public class SearchAlgorithms {
+
+    // Sequential Search (Linear Search) Implementation
+    public static int sequentialSearch(int[] array, int target) {
+        for (int i = 0; i < array.length; i++) {
+            if (array[i] == target) {
+                return i;  // Return the index of the found element
+            }
+        }
+        return -1;  // Return -1 if the element is not found
+    }
+
+    // Binary Search Implementation (Assumes the array is sorted)
+    public static int binarySearch(int[] array, int target) {
+        int left = 0;
+        int right = array.length - 1;
+
+        while (left <= right) {
+            int mid = left + (right - left) / 2;  // Find the middle element
+
+            // Check if target is at the mid
+            if (array[mid] == target) {
+                return mid;
+            }
+
+            // If the target is smaller, ignore the right half
+            if (array[mid] > target) {
+                right = mid - 1;
+            }
+            // If the target is larger, ignore the left half
+            else {
+                left = mid + 1;
+            }
+        }
+        return -1;  // Return -1 if the element is not found
+    }
+
+    // Method to print the array (for debugging or showing the array)
+    public static void printArray(int[] array) {
+        for (int element : array) {
+            System.out.print(element + " ");
+        }
+        System.out.println();
+    }
+
+    // Main driver method
+    public static void main(String[] args) {
+        // Example array for searching
+        int[] array = {12, 34, 54, 23, 45, 9, 76, 88, 21};
+
+        System.out.println("Array:");
+        printArray(array);
+
+        // Sequential Search Test
+        int targetSequential = 23;
+        int resultSequential = sequentialSearch(array, targetSequential);
+        if (resultSequential != -1) {
+            System.out.println("Sequential Search: " + targetSequential + " found at index " + resultSequential);
+        } else {
+            System.out.println("Sequential Search: " + targetSequential + " not found.");
+        }
+
+        // Sorting the array before performing Binary Search (required for Binary Search)
+        Arrays.sort(array);
+        System.out.println("\nSorted Array:");
+        printArray(array);
+
+        // Binary Search Test
+        int targetBinary = 23;
+        int resultBinary = binarySearch(array, targetBinary);
+        if (resultBinary != -1) {
+            System.out.println("Binary Search: " + targetBinary + " found at index " + resultBinary);
+        } else {
+            System.out.println("Binary Search: " + targetBinary + " not found.");
+        }
+    }
+}
+----------------------------------------------
+public class BinarySearchChar {
+
+    // Binary Search method to find element 'J'
+    public static int binarySearch(char[] array, char target) {
+        int left = 0;
+        int right = array.length - 1;
+
+        while (left <= right) {
+            int mid = left + (right - left) / 2; // Find the middle index
+            
+            // Check if target is at the mid
+            if (array[mid] == target) {
+                return mid;  // Target found, return the index
+            }
+            
+            // If target is smaller, search in the left half
+            if (array[mid] > target) {
+                right = mid - 1;
+            } else {
+                // If target is larger, search in the right half
+                left = mid + 1;
+            }
+        }
+        
+        return -1;  // Target not found, return -1
+    }
+
+    // Method to print the array (for debugging or showing the array)
+    public static void printArray(char[] array) {
+        for (char c : array) {
+            System.out.print(c + " ");
+        }
+        System.out.println();
+    }
+
+    // Main driver method
+    public static void main(String[] args) {
+        // Sorted array from 'A' to 'Z'
+        char[] array = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
+        
+        System.out.println("Sorted Array:");
+        printArray(array);
+        
+        // Element to search for
+        char target = 'J';
+        
+        // Perform Binary Search
+        int result = binarySearch(array, target);
+        
+        // Output the result
+        if (result != -1) {
+            System.out.println("Element '" + target + "' found at index: " + result);
+        } else {
+            System.out.println("Element '" + target + "' not found.");
+        }
+    }
+}

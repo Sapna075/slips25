@@ -1,0 +1,282 @@
+import java.util.Scanner;
+
+class Node {
+    int data;
+    Node next;
+
+    Node(int data) {
+        this.data = data;
+        this.next = null;
+    }
+}
+
+class CircularLinkedList {
+    private Node last; // Points to the last node in the circular linked list
+
+    // Method to insert a new node at the end of the list
+    public void insert(int data) {
+        Node newNode = new Node(data);
+        if (last == null) {
+            last = newNode;
+            last.next = last; // Point to itself, making it circular
+        } else {
+            newNode.next = last.next; // New node points to the first node
+            last.next = newNode; // Last node points to the new node
+            last = newNode; // Update last to the new node
+        }
+        System.out.println("Inserted: " + data);
+    }
+
+    // Method to delete a node by value
+    public void delete(int data) {
+        if (last == null) {
+            System.out.println("List is empty. Cannot delete.");
+            return;
+        }
+
+        Node current = last.next; // Start from the first node
+        Node previous = last; // Keep track of the previous node
+
+        // Check if the node to be deleted is the only node in the list
+        if (current.data == data && current == last) {
+            last = null; // List becomes empty
+            System.out.println("Deleted: " + data);
+            return;
+        }
+
+        // Traverse the list to find the node to delete
+        do {
+            if (current.data == data) {
+                previous.next = current.next; // Unlink the node
+                if (current == last) {
+                    last = previous; // Update last if needed
+                }
+                System.out.println("Deleted: " + data);
+                return;
+            }
+            previous = current;
+            current = current.next;
+        } while (current != last.next); // Loop until we come back to the first node
+
+        System.out.println("Value " + data + " not found in the list.");
+    }
+
+    // Method to display the circular linked list
+    public void display() {
+        if (last == null) {
+            System.out.println("List is empty.");
+            return;
+        }
+
+        Node current = last.next; // Start from the first node
+        System.out.print("Circular Linked List: ");
+        do {
+            System.out.print(current.data + " -> ");
+            current = current.next;
+        } while (current != last.next); // Loop until we come back to the first node
+        System.out.println("(back to " + last.next.data + ")");
+    }
+}
+
+public class CircularLinkedListDemo {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        CircularLinkedList list = new CircularLinkedList();
+        int choice;
+
+        do {
+            System.out.println("\nMenu:");
+            System.out.println("1. Insert");
+            System.out.println("2. Delete");
+            System.out.println("3. Display");
+            System.out.println("4. Exit");
+            System.out.print("Enter your choice: ");
+            choice = scanner.nextInt();
+
+            switch (choice) {
+                case 1:
+                    System.out.print("Enter value to insert: ");
+                    int valueToInsert = scanner.nextInt();
+                    list.insert(valueToInsert);
+                    break;
+                case 2:
+                    System.out.print("Enter value to delete: ");
+                    int valueToDelete = scanner.nextInt();
+                    list.delete(valueToDelete);
+                    break;
+                case 3:
+                    list.display();
+                    break;
+                case 4:
+                    System.out.println("Exiting...");
+                    break;
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+            }
+        } while (choice != 4);
+
+        scanner.close();
+    }
+}
+---------------------------
+package Proj11;
+
+import java.util.Scanner;
+
+class Polynomial {
+    static class Node {
+        int coefficient;
+        int exponent;
+        Node next;
+
+        Node(int coefficient, int exponent) {
+            this.coefficient = coefficient;
+            this.exponent = exponent;
+            this.next = null;
+        }
+    }
+
+    private Node tail; // Tail of the circular linked list
+
+    // Add a term to the polynomial
+    public void addTerm(int coefficient, int exponent) {
+        Node newNode = new Node(coefficient, exponent);
+        if (tail == null) {
+            tail = newNode;
+            tail.next = tail; // Point to itself to make it circular
+        } else {
+            Node temp = tail;
+            while (temp.next != tail.next && temp.next.exponent > exponent) {
+                temp = temp.next;
+            }
+            if (temp.next.exponent == exponent) {
+                // Combine like terms
+                temp.next.coefficient += coefficient;
+            } else {
+                newNode.next = temp.next;
+                temp.next = newNode;
+                if (newNode.next == tail.next) {
+                    tail = newNode;
+                }
+            }
+        }
+    }
+
+    // Add two polynomials
+    public Polynomial addPolynomials(Polynomial p) {
+        Polynomial result = new Polynomial();
+        Node p1 = this.tail.next; // Start from the head of the first polynomial
+        Node p2 = p.tail.next;   // Start from the head of the second polynomial
+
+        do {
+            result.addTerm(p1.coefficient, p1.exponent);
+            p1 = p1.next;
+        } while (p1 != this.tail.next);
+
+        do {
+            result.addTerm(p2.coefficient, p2.exponent);
+            p2 = p2.next;
+        } while (p2 != p.tail.next);
+
+        return result;
+    }
+
+    // Evaluate the polynomial for a given value of x
+    public int evaluate(int x) {
+        if (tail == null) return 0;
+
+        int result = 0;
+        Node temp = tail.next; // Start from the head
+        do {
+            result += temp.coefficient * Math.pow(x, temp.exponent);
+            temp = temp.next;
+        } while (temp != tail.next);
+
+        return result;
+    }
+
+    // Display the polynomial
+    public void display() {
+        if (tail == null) {
+            System.out.println("Polynomial is empty.");
+            return;
+        }
+        Node temp = tail.next; // Start from the head
+        do {
+            if (temp.coefficient != 0) {
+                System.out.print((temp.coefficient > 0 ? "+" : "") + temp.coefficient + "x^" + temp.exponent + " ");
+            }
+            temp = temp.next;
+        } while (temp != tail.next);
+        System.out.println();
+    }
+}
+
+public class PolynomialOperations {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        Polynomial polynomial1 = new Polynomial();
+        Polynomial polynomial2 = new Polynomial();
+        Polynomial result;
+        boolean exit = false;
+
+        while (!exit) {
+            System.out.println("\nMenu:");
+            System.out.println("1. Add term to Polynomial 1");
+            System.out.println("2. Add term to Polynomial 2");
+            System.out.println("3. Display Polynomials");
+            System.out.println("4. Add Polynomials");
+            System.out.println("5. Evaluate Polynomial 1");
+            System.out.println("6. Evaluate Polynomial 2");
+            System.out.println("7. Exit");
+            System.out.print("Enter your choice: ");
+            int choice = scanner.nextInt();
+
+            switch (choice) {
+                case 1:
+                    System.out.print("Enter coefficient: ");
+                    int coef1 = scanner.nextInt();
+                    System.out.print("Enter exponent: ");
+                    int exp1 = scanner.nextInt();
+                    polynomial1.addTerm(coef1, exp1);
+                    break;
+                case 2:
+                    System.out.print("Enter coefficient: ");
+                    int coef2 = scanner.nextInt();
+                    System.out.print("Enter exponent: ");
+                    int exp2 = scanner.nextInt();
+                    polynomial2.addTerm(coef2, exp2);
+                    break;
+                case 3:
+                    System.out.println("Polynomial 1:");
+                    polynomial1.display();
+                    System.out.println("Polynomial 2:");
+                    polynomial2.display();
+                    break;
+                case 4:
+                    result = polynomial1.addPolynomials(polynomial2);
+                    System.out.println("Resultant Polynomial after Addition:");
+                    result.display();
+                    break;
+                case 5:
+                    System.out.print("Enter value of x: ");
+                    int x1 = scanner.nextInt();
+                    System.out.println("Result of Polynomial 1 evaluation: " + polynomial1.evaluate(x1));
+                    break;
+                case 6:
+                    System.out.print("Enter value of x: ");
+                    int x2 = scanner.nextInt();
+                    System.out.println("Result of Polynomial 2 evaluation: " + polynomial2.evaluate(x2));
+                    break;
+                case 7:
+                    exit = true;
+                    System.out.println("Exiting program.");
+                    break;
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+            }
+        }
+        scanner.close();
+    }
+}
+

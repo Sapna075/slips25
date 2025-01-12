@@ -1,0 +1,339 @@
+A5
+
+import java.util.Scanner;
+import java.util.Stack;
+
+class StackADT {
+    private int[] stack;
+    private int top;
+    private int capacity;
+
+    // Constructor
+    public StackADT(int size) {
+        stack = new int[size];
+        capacity = size;
+        top = -1;
+    }
+
+    // Push element onto the stack
+    public void push(int value) {
+        if (isFull()) {
+            System.out.println("Stack overflow");
+            return;
+        }
+        stack[++top] = value;
+    }
+
+    // Pop element from the stack
+    public int pop() {
+        if (isEmpty()) {
+            System.out.println("Stack underflow");
+            return -1;
+        }
+        return stack[top--];
+    }
+
+    // Peek the top element
+    public int peek() {
+        if (isEmpty()) {
+            System.out.println("Stack is empty");
+            return -1;
+        }
+        return stack[top];
+    }
+
+    // Check if the stack is empty
+    public boolean isEmpty() {
+        return top == -1;
+    }
+
+    // Check if the stack is full
+    public boolean isFull() {
+        return top == capacity - 1;
+    }
+}
+
+public class ExpressionConversionEvaluation {
+    // Method to check precedence of operators
+    private static int precedence(char op) {
+        switch (op) {
+            case '+':
+            case '-':
+                return 1;
+            case '*':
+            case '/':
+                return 2;
+            case '^':
+                return 3;
+            default:
+                return -1;
+        }
+    }
+
+    // Method to convert infix to postfix
+    public static String infixToPostfix(String infix) {
+        Stack<Character> stack = new Stack<>();
+        StringBuilder postfix = new StringBuilder();
+
+        for (int i = 0; i < infix.length(); i++) {
+            char ch = infix.charAt(i);
+
+            // If operand, add to postfix
+            if (Character.isLetterOrDigit(ch)) {
+                postfix.append(ch);
+            }
+            // If '(', push to stack
+            else if (ch == '(') {
+                stack.push(ch);
+            }
+            // If ')', pop and add to postfix until '(' is encountered
+            else if (ch == ')') {
+                while (!stack.isEmpty() && stack.peek() != '(') {
+                    postfix.append(stack.pop());
+                }
+                stack.pop(); // Remove '('
+            }
+            // If operator, pop operators with higher or equal precedence
+            else {
+                while (!stack.isEmpty() && precedence(stack.peek()) >= precedence(ch)) {
+                    postfix.append(stack.pop());
+                }
+                stack.push(ch);
+            }
+        }
+
+        // Pop remaining operators
+        while (!stack.isEmpty()) {
+            postfix.append(stack.pop());
+        }
+
+        return postfix.toString();
+    }
+
+    // Method to evaluate a postfix expression
+    public static int evaluatePostfix(String postfix) {
+        StackADT stack = new StackADT(postfix.length());
+
+        for (int i = 0; i < postfix.length(); i++) {
+            char ch = postfix.charAt(i);
+
+            // If operand, push onto stack
+            if (Character.isDigit(ch)) {
+                stack.push(ch - '0'); // Convert char to int
+            }
+            // If operator, pop two operands, perform operation, and push result
+            else {
+                int b = stack.pop();
+                int a = stack.pop();
+                switch (ch) {
+                    case '+':
+                        stack.push(a + b);
+                        break;
+                    case '-':
+                        stack.push(a - b);
+                        break;
+                    case '*':
+                        stack.push(a * b);
+                        break;
+                    case '/':
+                        stack.push(a / b);
+                        break;
+                    case '^':
+                        stack.push((int) Math.pow(a, b));
+                        break;
+                }
+            }
+        }
+
+        return stack.pop(); // Final result
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        while (true) {
+            System.out.println("\nMenu:");
+            System.out.println("1. Convert Infix to Postfix");
+            System.out.println("2. Evaluate Postfix Expression");
+            System.out.println("3. Exit");
+            System.out.print("Enter your choice: ");
+            int choice = scanner.nextInt();
+            scanner.nextLine(); // Consume newline
+
+            switch (choice) {
+                case 1:
+                    System.out.print("Enter infix expression: ");
+                    String infix = scanner.nextLine();
+                    String postfix = infixToPostfix(infix);
+                    System.out.println("Postfix Expression: " + postfix);
+                    break;
+                case 2:
+                    System.out.print("Enter postfix expression: ");
+                    String postfixExp = scanner.nextLine();
+                    int result = evaluatePostfix(postfixExp);
+                    System.out.println("Evaluation Result: " + result);
+                    break;
+                case 3:
+                    System.out.println("Exiting program.");
+                    scanner.close();
+                    return;
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+            }
+        }
+    }
+}
+---------------------------
+
+package Proj11;
+
+import java.util.*;
+
+class StackADT {
+    private int top;
+    private int[] stack;
+    private int capacity;
+
+    // Constructor
+    public StackADT(int size) {
+        stack = new int[size];
+        capacity = size;
+        top = -1;
+    }
+
+    // Push an element onto the stack
+    public void push(int value) {
+        if (isFull()) {
+            System.out.println("Stack overflow");
+            return;
+        }
+        stack[++top] = value;
+    }
+
+    // Pop an element from the stack
+    public int pop() {
+        if (isEmpty()) {
+            System.out.println("Stack underflow");
+            return -1;
+        }
+        return stack[top--];
+    }
+
+    // Peek the top element of the stack
+    public int peek() {
+        if (isEmpty()) {
+            System.out.println("Stack is empty");
+            return -1;
+        }
+        return stack[top];
+    }
+
+    // Check if the stack is empty
+    public boolean isEmpty() {
+        return top == -1;
+    }
+
+    // Check if the stack is full
+    public boolean isFull() {
+        return top == capacity - 1;
+    }
+}
+
+public class InfixToPrefix {
+
+    // Method to check if a character is an operator
+    private static boolean isOperator(char ch) {
+        return ch == '+' || ch == '-' || ch == '*' || ch == '/' || ch == '^';
+    }
+
+    // Method to return precedence of operators
+    private static int precedence(char op) {
+        switch (op) {
+            case '+':
+            case '-':
+                return 1;
+            case '*':
+            case '/':
+                return 2;
+            case '^':
+                return 3;
+            default:
+                return -1;
+        }
+    }
+
+    // Method to reverse a string
+    private static String reverse(String str) {
+        StringBuilder reversed = new StringBuilder(str).reverse();
+        for (int i = 0; i < reversed.length(); i++) {
+            char ch = reversed.charAt(i);
+            if (ch == '(') {
+                reversed.setCharAt(i, ')');
+            } else if (ch == ')') {
+                reversed.setCharAt(i, '(');
+            }
+        }
+        return reversed.toString();
+    }
+
+    // Method to convert infix expression to postfix
+    private static String infixToPostfix(String infix) {
+        Stack<Character> stack = new Stack<>();
+        StringBuilder postfix = new StringBuilder();
+
+        for (int i = 0; i < infix.length(); i++) {
+            char ch = infix.charAt(i);
+
+            if (Character.isLetterOrDigit(ch)) {
+                postfix.append(ch); // Add operand to postfix
+            } else if (ch == '(') {
+                stack.push(ch); // Push '(' onto the stack
+            } else if (ch == ')') {
+                // Pop from stack until '(' is encountered
+                while (!stack.isEmpty() && stack.peek() != '(') {
+                    postfix.append(stack.pop());
+                }
+                stack.pop(); // Remove '('
+            } else if (isOperator(ch)) {
+                // Pop from stack based on precedence
+                while (!stack.isEmpty() && precedence(stack.peek()) >= precedence(ch)) {
+                    postfix.append(stack.pop());
+                }
+                stack.push(ch); // Push the operator onto the stack
+            }
+        }
+
+        // Pop remaining operators from the stack
+        while (!stack.isEmpty()) {
+            postfix.append(stack.pop());
+        }
+
+        return postfix.toString();
+    }
+
+    // Method to convert infix expression to prefix
+    public static String infixToPrefix(String infix) {
+        // Reverse the infix expression
+        String reversedInfix = reverse(infix);
+
+        // Convert the reversed infix to postfix
+        String postfix = infixToPostfix(reversedInfix);
+
+        // Reverse the postfix to get the prefix
+        return reverse(postfix);
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Enter an infix expression:");
+        String infix = scanner.nextLine();
+
+        // Convert infix to prefix
+        String prefix = infixToPrefix(infix);
+        System.out.println("Prefix Expression: " + prefix);
+
+        scanner.close();
+    }
+}
+
