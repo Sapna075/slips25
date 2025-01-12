@@ -1,0 +1,197 @@
+Slip 6
+package Proj11;
+
+class CircularQueue {
+    private int[] queue; // Array to store the queue elements
+    private int front;   // Index of the front element
+    private int rear;    // Index of the rear element
+    private int capacity; // Maximum number of elements in the queue
+    private int size;     // Current number of elements in the queue
+
+    // Constructor to initialize the queue
+    public CircularQueue(int capacity) {
+        this.capacity = capacity;
+        this.queue = new int[capacity];
+        this.front = 0;
+        this.rear = -1;
+        this.size = 0;
+    }
+
+    // Method to add an element to the queue
+    public void enqueue(int value) {
+        if (isFull()) {
+            System.out.println("Queue is full. Cannot enqueue " + value);
+            return;
+        }
+        rear = (rear + 1) % capacity; // Move rear to the next position
+        queue[rear] = value;           // Add the new element
+        size++;                         // Increase the size
+        System.out.println("Enqueued: " + value);
+    }
+
+    // Method to remove an element from the queue
+    public int dequeue() {
+        if (isEmpty()) {
+            System.out.println("Queue is empty. Cannot dequeue.");
+            return -1; // Return -1 if the queue is empty
+        }
+        int value = queue[front];      // Get the front element
+        front = (front + 1) % capacity; // Move front to the next position
+        size--;                         // Decrease the size
+        System.out.println("Dequeued: " + value);
+        return value;                  // Return the dequeued element
+    }
+
+    // Method to check if the queue is empty
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
+    // Method to check if the queue is full
+    public boolean isFull() {
+        return size == capacity;
+    }
+
+    // Method to get the current size of the queue
+    public int getSize() {
+        return size;
+    }
+
+    // Method to display the elements of the queue
+    public void display() {
+        if (isEmpty()) {
+            System.out.println("Queue is empty.");
+            return;
+        }
+        System.out.print("Queue elements: ");
+        for (int i = 0; i < size; i++) {
+            System.out.print(queue[(front + i) % capacity] + " ");
+        }
+        System.out.println();
+    }
+
+    // Main method to test the CircularQueue
+    public static void main(String[] args) {
+        CircularQueue cq = new CircularQueue(5); // Create a circular queue of capacity 5
+
+        cq.enqueue(10);
+        cq.enqueue(20);
+        cq.enqueue(30);
+        cq.enqueue(40);
+        cq.enqueue(50);
+        cq.display(); // Display the queue
+
+        cq.dequeue();
+        cq.dequeue();
+        cq.display(); // Display the queue after dequeuing
+
+        cq.enqueue(60);
+        cq.enqueue(70);
+        cq.display(); // Display the queue after enqueuing more elements
+    }
+}
+
+---------------------------------------------------------------------
+class Node {
+    int data;
+    Node next;
+    
+    Node(int data) {
+		this.data = data;
+		this.next = null;
+    }
+ }
+class LinkedQueue {
+	private Node front;
+	private Node rear;
+    
+	public LinkedQueue() {
+		this.front = null;
+		this.rear = null;
+	}
+    
+    // Enqueue operation
+    public void enqueue(int value) {
+		Node newNode = new Node(value);
+		if (rear == null) {
+			front = newNode;
+			rear = newNode;
+		}else {
+			rear.next = newNode;
+			rear = newNode;
+		}
+		System.out.println("Inserted " + value);
+    }
+    
+    // Dequeue operation
+    public int dequeue() {
+		if (front == null) {
+			System.out.println("Queue is empty");
+			return -1;
+		}
+		int value = front.data;
+		front = front.next;
+		if (front == null) {
+			rear = null;
+		}
+		return value;
+    }
+    
+    // Display the queue
+    public void display() {
+		if (front == null) {
+			System.out.println("Queue is empty");
+			return;
+		}
+		Node temp = front;
+		System.out.print("Queue elements: ");
+		while (temp != null) {
+			System.out.print(temp.data + " ");
+			temp = temp.next;
+		}
+		System.out.println();
+	}
+    
+    // Peek the front element
+    public int peek() {
+		if (front == null) {
+			System.out.println("Queue is empty");
+			return -1;
+		}
+		return front.data;
+    }
+}
+ class Main {
+    public static void main(String[] args)
+	{
+		LinkedQueue queue = new LinkedQueue();
+    
+		// Enqueue elements
+		queue.enqueue(10);
+		queue.enqueue(20);
+		queue.enqueue(30);
+		queue.enqueue(40);
+		queue.enqueue(50);
+		
+		// Display elements
+		queue.display();
+    
+		// Dequeue elements
+		System.out.println("Deleted " + queue.dequeue());
+		System.out.println("Deleted " + queue.dequeue());
+		
+		// Display elements again
+		queue.display();
+		
+		// Enqueue more elements
+		queue.enqueue(60);
+		queue.enqueue(70);
+		
+		// Display elements again
+		queue.display();
+		
+		// Peek the front element
+		
+		System.out.println("Front element is " + queue.peek());
+    }
+}
